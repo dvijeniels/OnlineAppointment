@@ -1,0 +1,112 @@
+﻿@model Zapis.Models.appointment
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_User.cshtml";
+}
+ @{int count = 0,count2=5000;}
+@*<h1>ПОСОЛЬСТВО КЫРГЫЗСКОЙ РЕСПУБЛИКИ</h1>*@
+<h1>СТОМАТОЛОГИЯ</h1>
+<h4>ЗАПИСАТЬСЯ</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+             <div class="form-group">
+                <label asp-for="CategoryId" class="control-label"></label>
+                <select asp-for="CategoryId" class="form-control form-control-lg" asp-items="ViewBag.CategoryId"></select>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="NameSurname" class="control-label"></label>
+                <input asp-for="NameSurname" class="form-control" />
+                <span asp-validation-for="NameSurname" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Telefon" class="control-label"></label>
+                <input asp-for="Telefon" class="form-control" />
+                <span asp-validation-for="Telefon" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                 <label asp-for="DateTime" class="control-label"></label>
+                <input id="dateText" asp-for="DateTime" readonly class="form-control" />
+                <span asp-validation-for="DateTime" class="text-danger"></span>
+            </div>
+            <div id="tarihvesaat">
+                @{
+                    string[] saat = new string[] { "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00","12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00" };
+                    DateTime today = DateTime.Now.AddDays(1);
+                    string toplam="",equalsTime="";
+                    for(int i =0;i<7;i++)
+                    {
+                        count++;
+                        <div class="demo-inline-spacing">
+                        <button type="button" onclick="myFunction(@count)" class="btn btn-secondary btn-sm input-block-level form-control" data-date="@today"> <i class='bx bxs-down-arrow'></i> &nbsp;@today.ToString("dd/MM/yyyy")&nbsp;<i class='bx bxs-down-arrow'></i></button>
+                         </div>
+                        
+                        <div id="@count" class="demo-inline-spacing" style="display: none;">
+                            <div class="d-flex flex-wrap" id="icons-container">
+                                @{
+                                    for (int j = 0; j < saat.Length; j++) 
+                                    {
+                                        count2++;
+                                        toplam = Convert.ToString(@today.ToString("dd/MM/yyyy") + " "+@saat[j]);
+
+                                        @foreach ( var  appoint  in  (List <appointment>)ViewData[ "EmployeeData" ])  
+                                        {  
+                                            if(@appoint.DateTime == toplam)
+                                            {
+                                                equalsTime = toplam;
+                                                <button type="button" id="@count2" onclick="errorText()" value="@today.ToString("dd/MM/yyyy") @saat[j]" style="max-width: 70px; width: 100%; background-color:red;" class="btn btn-outline-secondary">
+                                                    <i  class="tf-icons bx bx-bell"></i>@saat[j]
+                                                </button>
+                                            }
+                                        }
+                                        if (toplam!=equalsTime)
+                                        {
+                                            <button type="button" id="@count2" onclick="getInputValue(@count2)" value="@today.ToString("dd/MM/yyyy") @saat[j]" style="max-width: 70px; width: 100%;" class="btn btn-outline-secondary">
+                                            <i class="tf-icons bx bx-bell"></i>@saat[j]
+                                        </button>
+                                        }
+                                }
+                                }
+                            </div>
+                        </div>
+                        
+                        
+                        today = today.AddDays(1);
+                    }
+                }
+            </div>
+            <div class="demo-inline-spacing">
+                <input type="submit"  value="Записаться" class="btn btn-success input-block-level form-control" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function myFunction(parametr) {
+        var x = document.getElementById(parametr);
+        if (x.style.display === "none") {
+        x.style.display = "block";
+        } else {
+        x.style.display = "none";
+        }
+    }
+    function getInputValue(count2) {
+        console.log(count2);
+        var buttons = document.getElementById(count2);
+        var datetxt = document.getElementById("dateText");
+        datetxt.value=buttons.value;
+    }
+    function errorText() {
+        alert('Время занято!');
+    }
+</script>
+@section Scripts {
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+}

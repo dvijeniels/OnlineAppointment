@@ -1,0 +1,76 @@
+﻿@model IEnumerable<Zapis.Models.appointment>
+
+@{
+    ViewData["Title"] = "Добавление пациента";
+    Layout = "~/Views/Shared/_Admin.cshtml";
+}
+
+<h1>Пациенты</h1>
+
+<p>
+    <a asp-action="Create">Добавить нового пациента</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NameSurname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Telefon)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IpAddress)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.category.CategoryName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.NameSurname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Telefon)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IpAddress)
+            </td>
+            <td>
+                @if (item.Status==1)
+                {<ins>Активный</ins>}
+                else if (item.Status==2)
+                { <ins>Отмененный</ins>}
+                else if (item.Status==3)
+                { <ins>Завершенный</ins>}
+                else if (item.Status==4)
+                { <ins>Не пришедший</ins>}
+             </td>
+@*            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>*@
+            <td>
+                @Html.DisplayFor(modelItem => item.category.CategoryName)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.AppointmentId">Изменить</a> |
+                <a asp-action="Details" asp-route-id="@item.AppointmentId">Детали</a> |
+                <a asp-action="Delete" asp-route-id="@item.AppointmentId">Удалить</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
